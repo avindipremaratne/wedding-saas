@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Theme 1 (Heirloom) colour tokens. Each becomes a Tailwind utility
+   (bg-gold, text-navy, border-gold/20 ...). A site can override any of them
+   by setting the same CSS variable on its wrapper (see themes/heirloom/config.ts). */
+@theme {
+  --color-gold: #c8a96a;
+  --color-navy: #1f2a44;
+  --color-ivory: #f5ecd7;
+  --color-linen: #faf6f0;
+  --color-silk: #f7f3ee;
+  --color-ink: #1c1c1c;
+  --color-charcoal: #3a3a3a;
+  --color-porcelain: #fcfaf7;
 }
 
+/* Fonts come from next/font in app/layout.tsx as CSS variables. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-script: var(--font-ephesis), cursive;
+  --font-sans: var(--font-montserrat), sans-serif;
+  --font-serif: var(--font-cormorant), serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+/* Carry-over rules from the Wix build: no rubber-band overscroll on iOS. */
+html,
+body {
+  overscroll-behavior: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-silk);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* 16px minimum on form inputs stops iOS Safari from zooming on focus. */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
