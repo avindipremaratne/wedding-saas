@@ -1,4 +1,9 @@
 -- Wedding SaaS initial schema.
+-- Access is granted explicitly per table (the project has "automatically
+-- expose new tables" turned off), then narrowed further by RLS policies.
+-- service_role is the server-side admin key; it bypasses RLS but still
+-- needs table grants.
+--
 -- Tables follow the technical document's data model (sites, site_content,
 -- rsvps, themes), plus `orders` for Stripe checkouts made on the separate
 -- business website, which shares this Supabase project. This repo stays the
@@ -15,6 +20,8 @@ create table public.themes (
 );
 
 alter table public.themes enable row level security;
+grant select on public.themes to anon, authenticated;
+grant all on public.themes to service_role;
 
 -- Anyone can list the available designs.
 create policy "themes are public"
@@ -51,7 +58,8 @@ create policy "published or owned sites are visible"
 
 -- Keep the notification address private: grant column-level read access
 -- instead of the default table-wide SELECT.
-revoke select on public.sites from anon, authenticated;
+revoke all on public.sites from anon, authenticated;
+grant all on public.sites to service_role;
 grant select (id, slug, owner_id, theme_id, plan_tier, published, created_at)
   on public.sites to anon, authenticated;
 
@@ -76,6 +84,9 @@ create table public.site_content (
 );
 
 alter table public.site_content enable row level security;
+grant select on public.site_content to anon, authenticated;
+grant update on public.site_content to authenticated;
+grant all on public.site_content to service_role;
 
 create policy "content of visible sites is visible"
   on public.site_content for select
@@ -109,6 +120,9 @@ create table public.rsvps (
 create index rsvps_site_id_created_at_idx on public.rsvps (site_id, created_at desc);
 
 alter table public.rsvps enable row level security;
+grant insert on public.rsvps to anon, authenticated;
+grant select on public.rsvps to authenticated;
+grant all on public.rsvps to service_role;
 
 -- Guests can reply to a published site, but cannot read any replies back.
 create policy "guests can rsvp to published sites"
@@ -139,6 +153,8 @@ create table public.orders (
 );
 
 alter table public.orders enable row level security;
+revoke all on public.orders from anon, authenticated;
+grant all on public.orders to service_role;
 
 -- ------------------------------------------------------ updated_at helper
 create function public.touch_updated_at() returns trigger
