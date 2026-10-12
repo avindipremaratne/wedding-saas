@@ -5,7 +5,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // - getSupabase(): the public anon key. Row Level Security decides what it can
 //   read and write, so it is safe for guest-facing work like RSVPs.
 // - getSupabaseAdmin(): the service role key, which bypasses RLS. Only use it
-//   for trusted server jobs such as the Stripe webhook.
+//   for trusted server work such as looking up where RSVP notifications go.
 // Both return null when the keys are missing, so the app still runs locally
 // on the static site files in content/sites before Supabase is set up.
 

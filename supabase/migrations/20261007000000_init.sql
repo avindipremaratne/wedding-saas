@@ -1,6 +1,8 @@
 -- Wedding SaaS initial schema.
 -- Tables follow the technical document's data model (sites, site_content,
--- rsvps, themes), plus `orders` for Stripe checkouts. Row Level Security is
+-- rsvps, themes), plus `orders` for Stripe checkouts made on the separate
+-- business website, which shares this Supabase project. This repo stays the
+-- single source of truth for the schema. Row Level Security is
 -- on for every table; the comments on each policy say who can do what.
 
 -- ---------------------------------------------------------------- themes
@@ -121,8 +123,8 @@ create policy "owners read their rsvps"
   using (exists (select 1 from public.sites s where s.id = site_id and s.owner_id = (select auth.uid())));
 
 -- ---------------------------------------------------------------- orders
--- One row per completed Stripe Checkout, written only by the webhook with
--- the service role key. No policies: anon and authenticated get no access.
+-- One row per completed Stripe Checkout, written only by the business
+-- website's webhook with the service role key. No policies: anon and authenticated get no access.
 create table public.orders (
   id uuid primary key default gen_random_uuid(),
   stripe_session_id text not null unique,

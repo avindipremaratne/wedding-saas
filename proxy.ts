@@ -1,10 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-// Maps a request to a couple's site before routing. Two modes, so either
-// rendering approach works without code changes:
-//  - DEFAULT_SITE_SLUG set (one deployment per couple): "/" serves that site.
-//  - NEXT_PUBLIC_ROOT_DOMAIN set (one multi-tenant app): <slug>.<root domain>
-//    serves /<slug>. The bare root domain shows the product landing page.
+// Multi-tenant mode: with NEXT_PUBLIC_ROOT_DOMAIN set, <slug>.<root domain>
+// serves /<slug>. Otherwise "/" shows DEFAULT_SITE_SLUG (see app/page.tsx),
+// which suits one deployment per couple.
 
 const RESERVED = new Set(["www", "app", "api"]);
 
@@ -19,10 +17,7 @@ export function siteSlugForHost(host: string | null, rootDomain: string | undefi
 }
 
 export function proxy(request: NextRequest) {
-  const slug =
-    siteSlugForHost(request.headers.get("host"), process.env.NEXT_PUBLIC_ROOT_DOMAIN) ??
-    process.env.DEFAULT_SITE_SLUG ??
-    null;
+  const slug = siteSlugForHost(request.headers.get("host"), process.env.NEXT_PUBLIC_ROOT_DOMAIN);
   if (!slug) return NextResponse.next();
 
   const url = request.nextUrl.clone();
@@ -31,6 +26,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Only the site root is rewritten; assets, API routes and other pages pass through.
+  // Only the site root is rewritten; assets and other pages pass through.
   matcher: "/",
 };

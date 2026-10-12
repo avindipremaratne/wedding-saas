@@ -13,8 +13,8 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Wedding sites that feel like the invitation", template: "%s" },
-  description: "Elegant, personal wedding websites with RSVPs, galleries and music.",
+  title: { default: "Our Wedding", template: "%s" },
+  description: "Wedding details, RSVP and our story.",
 };
 
 export const viewport: Viewport = {

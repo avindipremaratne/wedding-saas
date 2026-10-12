@@ -10,6 +10,9 @@ const STATIC_SITES: Record<string, Site> = {
   [amaliAshen.slug]: amaliAshen,
 };
 
+/** Site shown at "/" (see app/page.tsx). */
+export const DEFAULT_SITE_SLUG = process.env.DEFAULT_SITE_SLUG || amaliAshen.slug;
+
 export function staticSiteSlugs(): string[] {
   return Object.keys(STATIC_SITES);
 }
