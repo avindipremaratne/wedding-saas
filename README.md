@@ -29,13 +29,16 @@ No keys are needed locally: without Supabase the bundled site in `content/sites/
 | `themes/heirloom/` | Theme 1: config (colours, assets), CSS module, sections |
 | `themes/index.ts` | Theme registry, keyed by `themes.component_bundle_ref` |
 | `content/sites/` | Bundled site data (also prerendered at build time) |
-| `supabase/` | Schema migration with Row Level Security (shared with the business website), and seed data |
+| `supabase/` | Schema migrations with Row Level Security (shared with the business website), storage bucket, and seed data |
+| `scripts/migrate-media.mjs` | Copies photos and theme assets from Wix to Supabase Storage |
 
 Server Components by default; `"use client"` only on the envelope intro, music player, header, countdown, RSVP form and the scroll fade-in wrapper.
 
 ## Setting up services
 
 **Supabase.** Create a project, run `supabase/migrations/20261007000000_init.sql` then `supabase/seed.sql` in the SQL editor (or `supabase db push` with the CLI), and set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`. Guests can insert RSVPs for published sites but never read them; `notification_email` is hidden from the anon key.
+
+**Photos and videos.** Run `supabase/migrations/20261012000000_storage.sql` in the SQL editor to create the public `site-media` bucket. Then `npm run media:migrate -- --dry-run` shows what will be copied from Wix, and `npm run media:migrate` copies each site's photos and the theme assets into the bucket and updates the database. Finally set the `NEXT_PUBLIC_MEDIA_URL` value it prints. Safe to re-run.
 
 **RSVP email.** Set `RESEND_API_KEY` and `RSVP_FROM_EMAIL`, and fill `sites.notification_email` for each couple.
 
