@@ -1,5 +1,8 @@
 -- Seed data: the Heirloom theme and the Amali & Ashen reference site.
--- Mirrors content/sites/amali-ashen.ts. Safe to re-run.
+-- Mirrors content/sites/heirloom-reference.ts, with the original Wix photo
+-- URLs; `npm run media:migrate` then moves them to Supabase Storage.
+-- Safe to re-run: existing site content is left untouched, so edits made in
+-- the dashboard and migrated photo URLs are never overwritten.
 
 insert into public.themes (id, name, component_bundle_ref)
 values ('heirloom', 'Heirloom', 'heirloom')
@@ -104,11 +107,4 @@ insert into public.site_content (
   }
 }'::jsonb
 )
-on conflict (site_id) do update set
-  couple_names = excluded.couple_names, wedding_date = excluded.wedding_date,
-  wedding_end = excluded.wedding_end, time_zone = excluded.time_zone,
-  ceremony_time = excluded.ceremony_time, rsvp_deadline = excluded.rsvp_deadline,
-  venue = excluded.venue, hero_photo_url = excluded.hero_photo_url,
-  gallery_photo_urls = excluded.gallery_photo_urls, palette_override = excluded.palette_override,
-  music_track_url = excluded.music_track_url, story_text = excluded.story_text,
-  schedule = excluded.schedule, theme_data = excluded.theme_data;
+on conflict (site_id) do nothing;

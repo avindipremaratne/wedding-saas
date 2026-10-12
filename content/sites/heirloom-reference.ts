@@ -1,12 +1,20 @@
+import { mediaUrl } from "@/lib/media";
 import type { Site } from "@/lib/types";
 
 const WIX = "https://static.wixstatic.com/media";
+const SLUG = "amali-ashen";
 
-// Theme 1's reference site: everything that was hardcoded in the Wix build,
-// pulled out into data. supabase/seed.sql inserts the same content.
-export const amaliAshen: Site = {
+// Photos live in the Supabase Storage bucket under sites/<slug>/ (copied by
+// `npm run media:migrate`); the Wix URL is only a fallback for a checkout
+// without NEXT_PUBLIC_MEDIA_URL.
+const photo = (name: string, wixFile: string) => mediaUrl(`sites/${SLUG}/${name}`, `${WIX}/${wixFile}`);
+
+// Theme 1's reference site (Amali & Ashen): everything that was hardcoded in
+// the Wix build, pulled out into data. It is the fallback when Supabase has
+// no row for the slug; supabase/seed.sql inserts the same content.
+export const heirloomReferenceSite: Site = {
   id: "00000000-0000-4000-8000-000000000001",
-  slug: "amali-ashen",
+  slug: SLUG,
   themeId: "heirloom",
   planTier: "demo",
   content: {
@@ -26,23 +34,23 @@ export const amaliAshen: Site = {
         "A place of faith, love and blessings.\nWe are delighted to celebrate this special moment\nsurrounded by our family and friends.",
     },
     heroPhoto: {
-      src: `${WIX}/b5e630_5146772074b643ac90882b1e50aba8d2~mv2.jpeg`,
+      src: photo("hero.jpeg", "b5e630_5146772074b643ac90882b1e50aba8d2~mv2.jpeg"),
       alt: "Amali and Ashen",
     },
     // Fixed order on purpose: the Wix CMS returned photos in a
     // non-deterministic order, so the gallery is a static ordered array.
     galleryPhotos: [
-      { src: `${WIX}/b5e630_80c27a2802be428a8b3a404cdab5c878~mv2.jpg`, alt: "Journey moment 1" },
-      { src: `${WIX}/b5e630_46a0f3cec01a47a99162a0a6cb6fc0ab~mv2.jpg`, alt: "Journey moment 2" },
-      { src: `${WIX}/b5e630_f2ab7a1bc0644fc19d3c1d8837feb462~mv2.jpg`, alt: "Journey moment 3" },
-      { src: `${WIX}/b5e630_1c156a7d317148a89a42dabb06c4df9e~mv2.jpg`, alt: "Journey moment 4" },
-      { src: `${WIX}/b5e630_74ddea6e0f1f4ec28d1135fccb7eb9d6~mv2.jpg`, alt: "Journey moment 5" },
+      { src: photo("gallery-01.jpg", "b5e630_80c27a2802be428a8b3a404cdab5c878~mv2.jpg"), alt: "Journey moment 1" },
+      { src: photo("gallery-02.jpg", "b5e630_46a0f3cec01a47a99162a0a6cb6fc0ab~mv2.jpg"), alt: "Journey moment 2" },
+      { src: photo("gallery-03.jpg", "b5e630_f2ab7a1bc0644fc19d3c1d8837feb462~mv2.jpg"), alt: "Journey moment 3" },
+      { src: photo("gallery-04.jpg", "b5e630_1c156a7d317148a89a42dabb06c4df9e~mv2.jpg"), alt: "Journey moment 4" },
+      { src: photo("gallery-05.jpg", "b5e630_74ddea6e0f1f4ec28d1135fccb7eb9d6~mv2.jpg"), alt: "Journey moment 5" },
     ],
     musicTrackUrl: "https://www.youtube.com/watch?v=7maJOI3QMu0",
     storyText: "Before forever, there was this — our story in moments.",
     schedule: [],
     details: {
-      logoUrl: `${WIX}/b5e630_ded37eca146a4ec2852495daf970742e~mv2.png`,
+      logoUrl: photo("logo.png", "b5e630_ded37eca146a4ec2852495daf970742e~mv2.png"),
       tagline: "Where We Become Us",
       heroKicker: "We're getting married",
       verse: {

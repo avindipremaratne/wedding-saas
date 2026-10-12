@@ -1,4 +1,5 @@
 import type { ThemeColors } from "@/lib/types";
+import { mediaUrl } from "@/lib/media";
 import assets from "./assets.json";
 
 // Theme 1, the Amali & Ashen design. Colours become CSS variables on the
@@ -16,14 +17,11 @@ export const heirloomColors: ThemeColors = {
 };
 
 // Design assets that belong to the theme rather than to a couple. Each has
-// its original Wix URL and a path in the Supabase Storage bucket (see
-// assets.json). Once `npm run media:migrate` has copied them, setting
-// NEXT_PUBLIC_MEDIA_URL serves them from Supabase instead of Wix.
-const MEDIA_URL = process.env.NEXT_PUBLIC_MEDIA_URL?.replace(/\/+$/, "");
-
+// a path in the Supabase Storage bucket and its original Wix URL as the
+// fallback (see assets.json and lib/media.ts).
 function asset(key: keyof typeof assets): string {
   const { source, path } = assets[key];
-  return MEDIA_URL ? `${MEDIA_URL}/${path}` : source;
+  return mediaUrl(path, source);
 }
 
 export const heirloomAssets = {

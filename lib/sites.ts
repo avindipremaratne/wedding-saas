@@ -1,5 +1,5 @@
 import "server-only";
-import { amaliAshen } from "@/content/sites/amali-ashen";
+import { heirloomReferenceSite } from "@/content/sites/heirloom-reference";
 import { getSupabase } from "@/lib/supabase/server";
 import type { HeirloomDetails, PlanTier, Site, SiteContent, ThemeId } from "@/lib/types";
 
@@ -7,11 +7,11 @@ import type { HeirloomDetails, PlanTier, Site, SiteContent, ThemeId } from "@/li
 // not configured (local development) or has no row for the slug, and they
 // are prerendered at build time.
 const STATIC_SITES: Record<string, Site> = {
-  [amaliAshen.slug]: amaliAshen,
+  [heirloomReferenceSite.slug]: heirloomReferenceSite,
 };
 
 /** Site shown at "/" (see app/page.tsx). */
-export const DEFAULT_SITE_SLUG = process.env.DEFAULT_SITE_SLUG || amaliAshen.slug;
+export const DEFAULT_SITE_SLUG = process.env.DEFAULT_SITE_SLUG || heirloomReferenceSite.slug;
 
 export function staticSiteSlugs(): string[] {
   return Object.keys(STATIC_SITES);
