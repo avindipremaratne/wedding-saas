@@ -10,6 +10,7 @@ interface YTPlayer {
   playVideo(): void;
   pauseVideo(): void;
   seekTo(seconds: number, allowSeekAhead: boolean): void;
+  destroy(): void;
 }
 interface YTNamespace {
   Player: new (
@@ -17,7 +18,7 @@ interface YTNamespace {
     options: {
       videoId: string;
       playerVars: Record<string, number | string>;
-      events: { onReady: () => void };
+      events: { onReady: (event: { target: YTPlayer }) => void };
     },
   ) => YTPlayer;
 }
@@ -42,9 +43,10 @@ const VOLUME = 50;
 // startMuted(), which plays-then-pauses muted to register that gesture with
 // the player. unmute() later starts the song for real.
 export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Ref<MusicPlayerHandle> }) {
+  // Only set once YouTube reports the player ready. Before that its methods
+  // don't exist yet, so every call below checks this first.
   const playerRef = useRef<YTPlayer | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isReadyRef = useRef(false);
   const pendingStartRef = useRef(false);
   const pendingUnmuteRef = useRef(false);
   const shouldBePlayingRef = useRef(false);
@@ -83,9 +85,20 @@ export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Re
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+    let player: YTPlayer | null = null;
+    // YouTube replaces the element it is given with an iframe, so give it a
+    // fresh host inside a wrapper each time; removing the wrapper removes the
+    // iframe too. In development React runs this effect twice, and the
+    // cleanup below throws the first player away so only one ever exists.
+    const wrapper = document.createElement("div");
+    const host = document.createElement("div");
+    wrapper.appendChild(host);
+    containerRef.current?.appendChild(wrapper);
+
     function createPlayer() {
-      if (!containerRef.current || !window.YT) return;
-      playerRef.current = new window.YT.Player(containerRef.current, {
+      if (cancelled || !window.YT?.Player) return;
+      player = new window.YT.Player(host, {
         videoId,
         playerVars: {
           autoplay: 0,
@@ -98,11 +111,16 @@ export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Re
           fs: 0,
         },
         events: {
-          onReady: () => {
-            isReadyRef.current = true;
+          onReady: (event) => {
+            if (cancelled) {
+              event.target.destroy();
+              return;
+            }
+            playerRef.current = event.target;
             // Replay whichever cue fired before the player finished loading.
             if (pendingUnmuteRef.current) {
               pendingUnmuteRef.current = false;
+              pendingStartRef.current = false;
               runUnmute();
             } else if (pendingStartRef.current) {
               pendingStartRef.current = false;
@@ -116,22 +134,35 @@ export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Re
     if (window.YT?.Player) {
       createPlayer();
     } else {
-      window.onYouTubeIframeAPIReady = createPlayer;
+      const previous = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        previous?.();
+        createPlayer();
+      };
       if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
         const tag = document.createElement("script");
         tag.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(tag);
       }
     }
+
+    return () => {
+      cancelled = true;
+      playerRef.current = null;
+      // destroy() only exists once the player is ready; until then, removing
+      // the wrapper is enough, and onReady above will not adopt it.
+      if (typeof player?.destroy === "function") player.destroy();
+      wrapper.remove();
+    };
   }, [videoId]);
 
   useImperativeHandle(ref, () => ({
     startMuted: () => {
-      if (isReadyRef.current) primeMuted();
+      if (playerRef.current) primeMuted();
       else pendingStartRef.current = true;
     },
     unmute: () => {
-      if (isReadyRef.current) runUnmute();
+      if (playerRef.current) runUnmute();
       else pendingUnmuteRef.current = true;
     },
   }));
