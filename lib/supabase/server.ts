@@ -9,11 +9,27 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // Both return null when the keys are missing, so the app still runs locally
 // on the static site files in content/sites before Supabase is set up.
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const url = supabaseOrigin(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const options = { auth: { persistSession: false, autoRefreshToken: false } };
+
+/**
+ * The client needs the bare project URL (https://<ref>.supabase.co). The
+ * dashboard also shows endpoint URLs such as .../rest/v1/, which make every
+ * request fail with "Invalid path specified in request URL", so keep only
+ * the origin.
+ */
+export function supabaseOrigin(raw: string | undefined): string | undefined {
+  if (!raw?.trim()) return undefined;
+  try {
+    return new URL(raw.trim()).origin;
+  } catch {
+    console.error("[supabase] NEXT_PUBLIC_SUPABASE_URL is not a valid URL");
+    return undefined;
+  }
+}
 
 let anonClient: SupabaseClient | null = null;
 let adminClient: SupabaseClient | null = null;
