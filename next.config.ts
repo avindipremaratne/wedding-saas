@@ -10,8 +10,6 @@ const storageHosts = [process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUB
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      // Theme 1 assets and the Amali & Ashen photos are still on Wix's CDN.
-      new URL("https://static.wixstatic.com/media/**"),
       // Photos and theme assets copied to Supabase Storage.
       ...storageHosts.map((hostname) => ({
         protocol: "https" as const,

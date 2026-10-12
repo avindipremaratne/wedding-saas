@@ -1,6 +1,6 @@
 -- Seed data: the Heirloom theme and the Amali & Ashen reference site.
--- Mirrors content/sites/heirloom-reference.ts, with the original Wix photo
--- URLs; `npm run media:migrate` then moves them to Supabase Storage.
+-- Mirrors content/sites/heirloom-reference.ts. Photo columns hold paths in
+-- the site-media Storage bucket; the app turns them into full URLs.
 -- Safe to re-run: existing site content is left untouched, so edits made in
 -- the dashboard and migrated photo URLs are never overwritten.
 
@@ -35,14 +35,14 @@ insert into public.site_content (
   "mapsUrl": "https://www.google.com/maps/place/St.+Thomas+Aquinas+%26+Canadian+Martyrs+Church/@44.6414593,-63.5982412,17z/data=!4m6!3m5!1s0x4b5a2227c11922ad:0xc4fd0eb63325b849!8m2!3d44.6414593!4d-63.5982412!16s%2Fg%2F1tj525h4",
   "description": "A place of faith, love and blessings.\nWe are delighted to celebrate this special moment\nsurrounded by our family and friends."
 }'::jsonb,
-  'https://static.wixstatic.com/media/b5e630_5146772074b643ac90882b1e50aba8d2~mv2.jpeg',
-  array['https://static.wixstatic.com/media/b5e630_80c27a2802be428a8b3a404cdab5c878~mv2.jpg', 'https://static.wixstatic.com/media/b5e630_46a0f3cec01a47a99162a0a6cb6fc0ab~mv2.jpg', 'https://static.wixstatic.com/media/b5e630_f2ab7a1bc0644fc19d3c1d8837feb462~mv2.jpg', 'https://static.wixstatic.com/media/b5e630_1c156a7d317148a89a42dabb06c4df9e~mv2.jpg', 'https://static.wixstatic.com/media/b5e630_74ddea6e0f1f4ec28d1135fccb7eb9d6~mv2.jpg'],
+  'sites/amali-ashen/hero.jpeg',
+  array['sites/amali-ashen/gallery-01.jpg', 'sites/amali-ashen/gallery-02.jpg', 'sites/amali-ashen/gallery-03.jpg', 'sites/amali-ashen/gallery-04.jpg', 'sites/amali-ashen/gallery-05.jpg'],
   null,
   'https://www.youtube.com/watch?v=7maJOI3QMu0',
   'Before forever, there was this — our story in moments.',
   '[]'::jsonb,
   '{
-  "logoUrl": "https://static.wixstatic.com/media/b5e630_ded37eca146a4ec2852495daf970742e~mv2.png",
+  "logoUrl": "sites/amali-ashen/logo.png",
   "tagline": "Where We Become Us",
   "heroKicker": "We''re getting married",
   "verse": {

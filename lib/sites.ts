@@ -1,5 +1,6 @@
 import "server-only";
 import { heirloomReferenceSite } from "@/content/sites/heirloom-reference";
+import { mediaUrl } from "@/lib/media";
 import { getSupabase } from "@/lib/supabase/server";
 import type { HeirloomDetails, PlanTier, Site, SiteContent, ThemeId } from "@/lib/types";
 
@@ -57,16 +58,20 @@ function fromRow(row: SiteRow): Site | null {
       ceremonyTime: c.ceremony_time,
       rsvpDeadline: c.rsvp_deadline ?? undefined,
       venue: c.venue,
-      heroPhoto: { src: c.hero_photo_url, alt: names },
+      // Media columns hold bucket paths (or, in older rows, full URLs).
+      heroPhoto: { src: mediaUrl(c.hero_photo_url), alt: names },
       galleryPhotos: (c.gallery_photo_urls ?? []).map((src, i) => ({
-        src,
+        src: mediaUrl(src),
         alt: `${names}, photo ${i + 1}`,
       })),
       paletteOverride: c.palette_override ?? undefined,
       musicTrackUrl: c.music_track_url ?? undefined,
       storyText: c.story_text ?? undefined,
       schedule: c.schedule ?? [],
-      details: c.theme_data,
+      details: {
+        ...c.theme_data,
+        logoUrl: c.theme_data.logoUrl ? mediaUrl(c.theme_data.logoUrl) : undefined,
+      },
     },
   };
 }

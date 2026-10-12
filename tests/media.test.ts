@@ -1,38 +1,52 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-async function load(mediaUrl: string | undefined) {
+async function load(env: { media?: string; supabase?: string }) {
   vi.resetModules();
-  vi.stubEnv("NEXT_PUBLIC_MEDIA_URL", mediaUrl ?? "");
+  vi.stubEnv("NEXT_PUBLIC_MEDIA_URL", env.media ?? "");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", env.supabase ?? "");
   return import("@/lib/media");
 }
 
 afterEach(() => vi.unstubAllEnvs());
 
+const BUCKET = "https://abc.supabase.co/storage/v1/object/public/site-media";
+
 describe("mediaUrl", () => {
-  it("serves from the bucket when NEXT_PUBLIC_MEDIA_URL is set", async () => {
-    const { mediaUrl } = await load("https://abc.supabase.co/storage/v1/object/public/site-media/");
-    expect(mediaUrl("sites/amali-ashen/hero.jpeg", "https://static.wixstatic.com/media/x.jpg")).toBe(
-      "https://abc.supabase.co/storage/v1/object/public/site-media/sites/amali-ashen/hero.jpeg",
-    );
+  it("derives the bucket URL from the Supabase project URL", async () => {
+    const { mediaUrl } = await load({ supabase: "https://abc.supabase.co/rest/v1/" });
+    expect(mediaUrl("sites/amali-ashen/hero.jpeg")).toBe(`${BUCKET}/sites/amali-ashen/hero.jpeg`);
   });
 
-  it("falls back to the original URL when it is not set", async () => {
-    const { mediaUrl } = await load(undefined);
-    expect(mediaUrl("sites/a/hero.jpeg", "https://static.wixstatic.com/media/x.jpg")).toBe(
-      "https://static.wixstatic.com/media/x.jpg",
-    );
+  it("prefers NEXT_PUBLIC_MEDIA_URL when set", async () => {
+    const { mediaUrl } = await load({ media: "https://cdn.example.com/media/", supabase: "https://abc.supabase.co" });
+    expect(mediaUrl("/themes/heirloom/flourish.png")).toBe("https://cdn.example.com/media/themes/heirloom/flourish.png");
+  });
+
+  it("passes absolute URLs through unchanged", async () => {
+    const { mediaUrl } = await load({ supabase: "https://abc.supabase.co" });
+    expect(mediaUrl(`${BUCKET}/sites/a/hero.jpeg`)).toBe(`${BUCKET}/sites/a/hero.jpeg`);
+  });
+
+  it("returns an unresolved local path when Supabase is not configured", async () => {
+    const { mediaUrl } = await load({});
+    expect(mediaUrl("sites/a/hero.jpeg")).toBe("/site-media/sites/a/hero.jpeg");
   });
 });
 
-describe("reference site photos", () => {
-  it("match the paths media:migrate uploads to", async () => {
-    await load("https://abc.supabase.co/storage/v1/object/public/site-media");
+describe("bundled content", () => {
+  it("never points at Wix", async () => {
+    await load({ supabase: "https://abc.supabase.co" });
     const { heirloomReferenceSite: site } = await import("@/content/sites/heirloom-reference");
-    const base = "https://abc.supabase.co/storage/v1/object/public/site-media/sites/amali-ashen";
-    expect(site.content.heroPhoto.src).toBe(`${base}/hero.jpeg`);
+    const { heirloomAssets } = await import("@/themes/heirloom/config");
+    const urls = [
+      site.content.heroPhoto.src,
+      ...site.content.galleryPhotos.map((p) => p.src),
+      site.content.details.logoUrl,
+      ...Object.values(heirloomAssets).flatMap((v) => (typeof v === "string" ? [v] : Object.values(v))),
+    ];
+    expect(urls.every((u) => u?.startsWith(`${BUCKET}/`))).toBe(true);
     expect(site.content.galleryPhotos.map((p) => p.src)).toEqual(
-      [1, 2, 3, 4, 5].map((n) => `${base}/gallery-0${n}.jpg`),
+      [1, 2, 3, 4, 5].map((n) => `${BUCKET}/sites/amali-ashen/gallery-0${n}.jpg`),
     );
-    expect(site.content.details.logoUrl).toBe(`${base}/logo.png`);
   });
 });

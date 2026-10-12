@@ -14,7 +14,7 @@ npm run lint
 npm run typecheck
 ```
 
-No keys are needed locally: without Supabase the bundled site in `content/sites/` is used and RSVPs are printed to the terminal. Copy `.env.example` to `.env.local` to turn services on.
+Copy `.env.example` to `.env.local` and add the Supabase settings. Without them the bundled site in `content/sites/` still renders and RSVPs are printed to the terminal, but photos and videos won't load, because they live in Supabase Storage.
 
 ## How it fits together
 
@@ -30,7 +30,6 @@ No keys are needed locally: without Supabase the bundled site in `content/sites/
 | `themes/index.ts` | Theme registry, keyed by `themes.component_bundle_ref` |
 | `content/sites/` | Bundled site data (also prerendered at build time) |
 | `supabase/` | Schema migrations with Row Level Security (shared with the business website), storage bucket, and seed data |
-| `scripts/migrate-media.mjs` | Copies photos and theme assets from Wix to Supabase Storage |
 
 Server Components by default; `"use client"` only on the envelope intro, music player, header, countdown, RSVP form and the scroll fade-in wrapper.
 
@@ -38,7 +37,7 @@ Server Components by default; `"use client"` only on the envelope intro, music p
 
 **Supabase.** Create a project, run `supabase/migrations/20261007000000_init.sql` then `supabase/seed.sql` in the SQL editor (or `supabase db push` with the CLI), and set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`. Guests can insert RSVPs for published sites but never read them; `notification_email` is hidden from the anon key.
 
-**Photos and videos.** Run `supabase/migrations/20261012000000_storage.sql` in the SQL editor to create the public `site-media` bucket. Then `npm run media:migrate -- --dry-run` shows what will be copied from Wix, and `npm run media:migrate` copies each site's photos and the theme assets into the bucket and updates the database. Finally set the `NEXT_PUBLIC_MEDIA_URL` value it prints. Safe to re-run.
+**Photos and videos.** Run `supabase/migrations/20261012000000_storage.sql` in the SQL editor to create the public `site-media` bucket. Theme files live under `themes/<theme>/` (listed in `themes/heirloom/assets.json`) and each couple's under `sites/<slug>/`. The database stores paths inside the bucket, such as `sites/amali-ashen/hero.jpeg`; the app builds the full URL from `NEXT_PUBLIC_SUPABASE_URL`. To add or replace a photo, upload it in **Storage → site-media** and put its path in `site_content`.
 
 **RSVP email.** Set `RESEND_API_KEY` and `RSVP_FROM_EMAIL`, and fill `sites.notification_email` for each couple.
 

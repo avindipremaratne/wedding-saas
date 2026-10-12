@@ -1,34 +1,10 @@
 {
-  "pageBackground": {
-    "source": "https://static.wixstatic.com/media/b5e630_962afd5611af40a0b1d4e6917aaabb81~mv2.png",
-    "path": "themes/heirloom/page-background.png"
-  },
-  "venueBackground": {
-    "source": "https://static.wixstatic.com/media/b5e630_93f75fc0cd3443e88029e35fbc854b5f~mv2.jpg",
-    "path": "themes/heirloom/venue-background.jpg"
-  },
-  "footerFloral": {
-    "source": "https://static.wixstatic.com/media/b5e630_bf488c1f65c446f1aa985e7b5c076cf5~mv2.jpg",
-    "path": "themes/heirloom/footer-floral.jpg"
-  },
-  "flourish": {
-    "source": "https://static.wixstatic.com/media/b5e630_e17db2bd3b5947b5b7436d2000a22d10~mv2.png",
-    "path": "themes/heirloom/flourish.png"
-  },
-  "ladiesIcon": {
-    "source": "https://static.wixstatic.com/media/b5e630_5f87fbae0e4344b3873a6f7494e10bb1~mv2.png",
-    "path": "themes/heirloom/ladies-icon.png"
-  },
-  "gentlemenIcon": {
-    "source": "https://static.wixstatic.com/media/b5e630_8fb083ad32d944d5b67d7d2135f0b248~mv2.png",
-    "path": "themes/heirloom/gentlemen-icon.png"
-  },
-  "envelopeDesktop": {
-    "source": "https://video.wixstatic.com/video/b5e630_060e92b416ae4ef8bdcc302ad3e7661e/1080p/mp4/file.mp4",
-    "path": "themes/heirloom/envelope-desktop.mp4"
-  },
-  "envelopeMobile": {
-    "source": "https://video.wixstatic.com/video/b5e630_180ed74c68224f17a504be8691c2ed82/1080p/mp4/file.mp4",
-    "path": "themes/heirloom/envelope-mobile.mp4"
-  }
+  "pageBackground": "themes/heirloom/page-background.png",
+  "venueBackground": "themes/heirloom/venue-background.jpg",
+  "footerFloral": "themes/heirloom/footer-floral.jpg",
+  "flourish": "themes/heirloom/flourish.png",
+  "ladiesIcon": "themes/heirloom/ladies-icon.png",
+  "gentlemenIcon": "themes/heirloom/gentlemen-icon.png",
+  "envelopeDesktop": "themes/heirloom/envelope-desktop.mp4",
+  "envelopeMobile": "themes/heirloom/envelope-mobile.mp4"
 }

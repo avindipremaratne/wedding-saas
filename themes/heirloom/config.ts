@@ -16,12 +16,10 @@ export const heirloomColors: ThemeColors = {
   porcelain: "#FCFAF7",
 };
 
-// Design assets that belong to the theme rather than to a couple. Each has
-// a path in the Supabase Storage bucket and its original Wix URL as the
-// fallback (see assets.json and lib/media.ts).
+// Design assets that belong to the theme rather than to a couple, stored in
+// the Supabase Storage bucket at the paths listed in assets.json.
 function asset(key: keyof typeof assets): string {
-  const { source, path } = assets[key];
-  return mediaUrl(path, source);
+  return mediaUrl(assets[key]);
 }
 
 export const heirloomAssets = {
