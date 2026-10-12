@@ -22,7 +22,10 @@ export async function sendRsvpNotification(options: {
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RSVP_FROM_EMAIL;
-  if (!apiKey || !from) return;
+  if (!apiKey || !from) {
+    console.info("[email] RSVP notification skipped: RESEND_API_KEY or RSVP_FROM_EMAIL is not set.");
+    return;
+  }
 
   const { rsvp, coupleNames } = options;
   const answer = rsvp.attending ? "Joyfully accepts" : "Regretfully declines";
@@ -43,6 +46,7 @@ export async function sendRsvpNotification(options: {
         )
         .join("")}
     </table>`;
+  const text = [`New RSVP for ${coupleNames.join(" & ")}`, "", ...rows.map(([label, value]) => `${label}: ${value}`)].join("\n");
 
   try {
     const response = await fetch(RESEND_ENDPOINT, {
@@ -54,10 +58,13 @@ export async function sendRsvpNotification(options: {
         reply_to: rsvp.email,
         subject: `RSVP: ${rsvp.guestName} — ${answer}`,
         html,
+        text,
       }),
     });
     if (!response.ok) {
       console.error("[email] Resend rejected the RSVP notification:", response.status, await response.text());
+    } else {
+      console.info(`[email] RSVP notification sent to ${options.to}.`);
     }
   } catch (error) {
     console.error("[email] Could not reach Resend:", error);

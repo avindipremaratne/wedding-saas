@@ -84,7 +84,11 @@ export async function submitRsvp(
       .maybeSingle<{ notification_email: string | null }>();
     if (data?.notification_email) {
       await sendRsvpNotification({ to: data.notification_email, coupleNames: site.content.coupleNames, rsvp });
+    } else {
+      console.info(`[email] RSVP notification skipped: no notification_email set for site "${site.slug}".`);
     }
+  } else {
+    console.info("[email] RSVP notification skipped: SUPABASE_SERVICE_ROLE_KEY is not set.");
   }
 
   return success;
