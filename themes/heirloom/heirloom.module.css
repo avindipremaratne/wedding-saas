@@ -182,23 +182,5 @@
   transition: background-color 0s ease-in-out 99999s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .wipe1,
-  .wipe2 {
-    clip-path: none;
-    animation: none;
-  }
-  .heroFadeUp {
-    opacity: 1;
-    animation: none;
-  }
-  .fadeIn {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .tick,
-  .tapRing {
-    animation: none;
-  }
-}
+/* Effects always play, including for visitors with "reduce motion" turned
+   on, to match the original Wix site (framer-motion's default). */
