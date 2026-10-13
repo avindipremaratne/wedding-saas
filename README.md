@@ -4,6 +4,8 @@ The wedding website template: themeable wedding sites on Next.js 16. Theme 1 ("H
 
 The business website (landing page, pricing, Stripe checkout) lives in a separate repo, `wedding-saas-business-website`. Both share one Supabase project, and this repo owns the database schema.
 
+New to the project? Start with the plain-language guide, [Wedding SaaS: How Everything Works](https://claude.ai/code/artifact/f3fbbd39-ed84-4c0d-9e1b-d3cd418f42f4). Keep it updated as the project changes.
+
 ## Run it
 
 ```bash
