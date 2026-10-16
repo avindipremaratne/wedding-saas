@@ -194,23 +194,11 @@ export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Re
         type="button"
         onClick={toggleMute}
         aria-label={isMuted ? "Unmute background music" : "Mute background music"}
-        className="fixed bottom-5 right-5 z-[9998] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gold/60 bg-navy/85 text-gold"
+        className="fixed bottom-5 right-5 z-[9998] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gold/60 bg-navy/85 text-lg leading-none tracking-normal text-gold"
       >
-        {isMuted ? <SpeakerIcon muted /> : <SpeakerIcon />}
+        {isMuted ? "🔇" : "🔊"}
       </button>
     </>
   );
 }
 
-function SpeakerIcon({ muted = false }: { muted?: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M11 5 6 9H2v6h4l5 4V5z" />
-      {muted ? (
-        <path d="m23 9-6 6M17 9l6 6" />
-      ) : (
-        <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
-      )}
-    </svg>
-  );
-}

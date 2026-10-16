@@ -29,7 +29,8 @@ export default function Venue({
   tagline: string;
   backgroundUrl: string;
 }) {
-  const [month, rest] = formatLongDate(weddingDate, timeZone).split(/ (?=\d+,)/);
+  // "August 27, 2026" shown as "August 27," over "2026", as on the Wix site.
+  const [month, rest] = formatLongDate(weddingDate, timeZone).split(/ (?=\d{4}$)/);
   const label = "font-sans text-[0.58rem] font-semibold uppercase tracking-[0.15em] text-ink md:text-[0.62rem]";
   const value = "font-sans text-[0.68rem] leading-normal text-charcoal md:text-[0.75rem]";
 

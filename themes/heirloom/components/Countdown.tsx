@@ -30,7 +30,7 @@ export default function Countdown({ target }: { target: string }) {
         const value = left?.[key] ?? 0;
         return (
           <div key={key} className={`flex w-[72px] flex-col items-center md:w-28 ${styles.countdownCell}`}>
-            <span key={value} className={`font-sans text-5xl tracking-tighter text-navy md:text-7xl ${styles.tick}`}>
+            <span key={value} className={`font-sans text-5xl font-semibold tracking-tighter text-navy md:text-7xl md:tracking-[-0.01em] ${styles.tick}`}>
               {String(value).padStart(2, "0")}
             </span>
             <div className="mx-auto my-1.5 h-px w-5 bg-gold" aria-hidden="true" />

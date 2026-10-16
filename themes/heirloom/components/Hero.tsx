@@ -24,13 +24,13 @@ export default function Hero({
       </div>
 
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-4 pt-10 text-center md:pt-0">
-        <p className={`mb-6 font-sans text-sm uppercase tracking-widest text-white/80 md:text-base ${styles.wipe1}`}>
+        <p className={`mb-6 font-sans text-sm uppercase tracking-widest text-white/80 md:text-base md:tracking-[-0.01em] ${styles.wipe1}`}>
           {tagline}
         </p>
-        <p className={`mb-2 font-sans text-lg font-semibold tracking-wide text-white/90 md:text-2xl ${styles.wipe2}`}>
+        <p className={`mb-2 font-sans text-lg font-semibold tracking-wide text-white/90 md:text-2xl md:tracking-[-0.011em] ${styles.wipe2}`}>
           {kicker}
         </p>
-        <h1 className={`mb-4 font-script text-6xl font-normal leading-tight text-white md:text-7xl lg:text-[100px] ${styles.heroFadeUp}`}>
+        <h1 className={`mb-4 font-script text-6xl font-normal leading-tight text-white md:text-7xl md:leading-none lg:text-[100px] ${styles.heroFadeUp}`}>
           {coupleNames[0]} &amp; {coupleNames[1]}
         </h1>
       </div>

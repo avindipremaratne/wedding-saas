@@ -14,6 +14,56 @@
   --color-porcelain: #fcfaf7;
 }
 
+/* Type scale copied from the original Wix build's Tailwind config: every
+   size has -0.01em letter-spacing, 8xl is 5.25rem (not Tailwind's 6rem),
+   and xl to 5xl are bold unless a font-weight class says otherwise. */
+@theme {
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-xs--letter-spacing: -0.01em;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-sm--letter-spacing: -0.01em;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-base--letter-spacing: -0.01em;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-lg--letter-spacing: -0.01em;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-xl--letter-spacing: -0.01em;
+  --text-xl--font-weight: 700;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-2xl--letter-spacing: -0.011em;
+  --text-2xl--font-weight: 700;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-3xl--letter-spacing: -0.01em;
+  --text-3xl--font-weight: 700;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-4xl--letter-spacing: -0.01em;
+  --text-4xl--font-weight: 700;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-5xl--letter-spacing: -0.01em;
+  --text-5xl--font-weight: 700;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-6xl--letter-spacing: -0.01em;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-7xl--letter-spacing: -0.01em;
+  --text-8xl: 5.25rem;
+  --text-8xl--line-height: 1;
+  --text-8xl--letter-spacing: -0.01em;
+  --text-9xl: 6rem;
+  --text-9xl--line-height: 1;
+  --text-9xl--letter-spacing: -0.01em;
+}
+
 /* Fonts come from next/font in app/layout.tsx as CSS variables. */
 @theme inline {
   --font-script: var(--font-ephesis), cursive;
@@ -35,6 +85,12 @@ body {
   background: var(--color-silk);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+/* Tailwind v3 (the Wix build) gave buttons a pointer cursor; v4 doesn't. */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
 }
 
 /* 16px minimum on form inputs stops iOS Safari from zooming on focus. */

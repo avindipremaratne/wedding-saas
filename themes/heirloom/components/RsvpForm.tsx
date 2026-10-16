@@ -32,7 +32,7 @@ export default function RsvpForm({
   if (state.status === "success" && dismissed !== state) {
     return (
       <div className="text-center" role="status">
-        <h3 className="mb-4 font-script text-5xl text-ink">Thank You!</h3>
+        <h3 className="mb-4 font-script text-5xl font-normal text-ink">Thank You!</h3>
         <p className="mb-8 font-sans text-[0.95rem] tracking-[0.04em] text-charcoal">
           {state.attending
             ? "Your RSVP has been received. We look forward to celebrating with you!"

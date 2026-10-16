@@ -8,7 +8,8 @@ const ephesis = Ephesis({ variable: "--font-ephesis", weight: "400", subsets: ["
 const montserrat = Montserrat({ variable: "--font-montserrat", subsets: ["latin"] });
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  weight: ["400", "500", "600"],
+  // Only 600, like the Wix build: its weight-500 labels render in 600 too.
+  weight: "600",
   subsets: ["latin"],
 });
 

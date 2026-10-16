@@ -26,7 +26,7 @@ export default function Footer({
       <div className="container relative z-10 mx-auto px-4">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="mb-4 h-px w-16 bg-gold" aria-hidden="true" />
-          <span className="font-script text-4xl text-ink md:text-5xl">
+          <span className="font-script text-4xl font-normal text-ink md:text-5xl">
             {coupleNames[0]} &amp; {coupleNames[1]}
           </span>
           <p className="font-sans text-sm uppercase tracking-widest text-charcoal">{tagline}</p>

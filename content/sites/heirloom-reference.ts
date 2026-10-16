@@ -51,7 +51,7 @@ export const heirloomReferenceSite: Site = {
       tagline: "Where We Become Us",
       heroKicker: "We're getting married",
       verse: {
-        text: "“Love is patient, love is kind… it always protects, always trusts, always hopes, always perseveres.”",
+        text: '"Love is patient, love is kind… it always protects, always trusts, always hopes, always perseveres."',
         reference: "1 Corinthians 13:4–7",
       },
       invitation: {

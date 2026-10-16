@@ -25,7 +25,7 @@ export default function Attire({
           <h2 className={`${displayHeading} mb-1 text-gold`}>Attire</h2>
           <DiamondDivider className="my-3" />
           <p className="mb-6 font-script text-[clamp(2rem,5vw,3rem)] leading-[1.3] text-ink">{attire.title}</p>
-          <p className={`${body} mx-auto max-w-[520px] tracking-[0.04em]`}>{attire.intro}</p>
+          <p className={`${body} mx-auto max-w-[520px] leading-[1.9] tracking-[0.04em]`}>{attire.intro}</p>
         </FadeIn>
 
         <FadeIn delay={0.2}>
