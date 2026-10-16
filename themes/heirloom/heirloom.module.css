@@ -1,0 +1,186 @@
+/* Styles that Tailwind utilities can't express cleanly: keyframes, the
+   intro gate, and browser autofill overrides. Scoped as a CSS Module. */
+
+/* ---------- Page background ---------- */
+/* A fixed-position layer rather than background-attachment: fixed, which
+   iOS Safari ignores or renders badly. */
+.pageBackground {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+@media (max-width: 768px) {
+  .pageBackground {
+    background-position: top right;
+  }
+}
+
+/* ---------- Hero reveal ---------- */
+@keyframes wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Paused until the envelope intro closes (body.intro-done), so they don't
+   burn through their delay while hidden behind it. */
+.wipe1,
+.wipe2 {
+  clip-path: inset(0 100% 0 0);
+}
+.wipe1 {
+  animation: wipe 1.2s ease 0.3s forwards paused;
+}
+.wipe2 {
+  animation: wipe 1s ease 1.8s forwards paused;
+}
+.heroFadeUp {
+  opacity: 0;
+  animation: fadeUp 1s ease 2.8s forwards paused;
+}
+:global(body.intro-done) .wipe1,
+:global(body.intro-done) .wipe2,
+:global(body.intro-done) .heroFadeUp {
+  animation-play-state: running;
+}
+
+/* ---------- Scroll fade-in ---------- */
+.fadeIn {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98),
+    transform 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+}
+.fadeIn[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Countdown digit tick ---------- */
+@keyframes tick {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.tick {
+  display: inline-block;
+  animation: tick 0.3s ease;
+}
+.countdownCell {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (hover: hover) {
+  .countdownCell:hover {
+    transform: translateY(-4px) scale(1.05);
+  }
+}
+
+/* ---------- Envelope intro ---------- */
+.envelope {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--color-ivory);
+  transition: opacity 0.4s ease-in-out;
+}
+.envelope[data-closing="true"] {
+  opacity: 0;
+}
+.envelopeVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.envelopeVideoMobile {
+  object-position: center 60%;
+}
+@keyframes hintIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+}
+.tapHint {
+  position: absolute;
+  bottom: 100px;
+  left: 0;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: hintIn 0.8s ease 1s forwards;
+}
+.tapRing {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 80%, transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+/* On phones, centre "Tap to Open" on the wax seal. */
+@media (max-width: 767px) {
+  .tapHint {
+    top: 70%;
+    bottom: auto;
+    left: 51%;
+    right: auto;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ---------- RSVP form ---------- */
+/* Keep typed and autofilled text in the theme colour. Safari and Chrome
+   paint autofill with their own colours unless overridden here. */
+.field {
+  -webkit-text-fill-color: var(--color-charcoal);
+}
+.field:-webkit-autofill,
+.field:-webkit-autofill:hover,
+.field:-webkit-autofill:focus,
+.field:autofill {
+  -webkit-text-fill-color: var(--color-charcoal);
+  caret-color: var(--color-charcoal);
+  box-shadow: 0 0 0 1000px transparent inset;
+  transition: background-color 0s ease-in-out 99999s;
+}
+
+/* Effects always play, including for visitors with "reduce motion" turned
+   on, to match the original Wix site (framer-motion's default). */

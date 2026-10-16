@@ -1,0 +1,10 @@
+{
+  "pageBackground": "themes/heirloom/page-background.png",
+  "venueBackground": "themes/heirloom/venue-background.jpg",
+  "footerFloral": "themes/heirloom/footer-floral.jpg",
+  "flourish": "themes/heirloom/flourish.png",
+  "ladiesIcon": "themes/heirloom/ladies-icon.png",
+  "gentlemenIcon": "themes/heirloom/gentlemen-icon.png",
+  "envelopeDesktop": "themes/heirloom/envelope-desktop.mp4",
+  "envelopeMobile": "themes/heirloom/envelope-mobile.mp4"
+}
