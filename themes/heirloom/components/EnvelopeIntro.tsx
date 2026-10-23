@@ -7,6 +7,8 @@ type Variant = "desktop" | "mobile";
 
 const MOBILE_QUERY = "(max-width: 767px)";
 const STALL_MS = 10_000;
+// Pause on the video's last frame before the page fades in.
+const HOLD_MS = 2_000;
 
 function subscribe(onChange: () => void) {
   const query = window.matchMedia(MOBILE_QUERY);
@@ -80,12 +82,15 @@ export default function EnvelopeIntro({
     if (watchdogRef.current) clearTimeout(watchdogRef.current);
   }, []);
 
-  const handleEnded = () => {
+  // holdMs keeps the last frame on screen first; failures close at once.
+  const close = (holdMs = 0) => {
     if (closedRef.current) return;
     closedRef.current = true;
     if (watchdogRef.current) clearTimeout(watchdogRef.current);
-    setClosing(true);
-    setTimeout(onComplete, 400);
+    setTimeout(() => {
+      setClosing(true);
+      setTimeout(onComplete, 400);
+    }, holdMs);
   };
 
   const handleTap = () => {
@@ -95,8 +100,8 @@ export default function EnvelopeIntro({
     playingRef.current = true;
     // Never trap the guest behind the envelope: open the page if playback
     // fails, or if the video still hasn't started after STALL_MS.
-    watchdogRef.current = setTimeout(handleEnded, STALL_MS);
-    videoRef.current?.play().catch(handleEnded);
+    watchdogRef.current = setTimeout(close, STALL_MS);
+    videoRef.current?.play().catch(() => close());
   };
 
   return (
@@ -128,8 +133,8 @@ export default function EnvelopeIntro({
           onPlaying={() => {
             if (playingRef.current && watchdogRef.current) clearTimeout(watchdogRef.current);
           }}
-          onEnded={handleEnded}
-          onError={() => playingRef.current && handleEnded()}
+          onEnded={() => close(HOLD_MS)}
+          onError={() => playingRef.current && close()}
           className={styles.envelopeVideo}
         />
       )}
