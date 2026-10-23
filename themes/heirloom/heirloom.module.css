@@ -152,14 +152,24 @@
   border: 1px solid color-mix(in srgb, var(--color-gold) 80%, transparent);
   animation: pulse 2s ease-in-out infinite;
 }
-/* On phones, centre "Tap to Open" on the wax seal. */
+/* On phones, circle the wax seal (the centre of the mobile video) with the
+   ring and put "Tap to Open" just below it. The seal is about 20% of the
+   video's width, and the 3:5 video is shown at max(100vw, 60dvh) wide, so
+   the ring is 28% of that. Shifting up by half the ring puts the ring's
+   centre, not the whole block's, on the seal. */
 @media (max-width: 767px) {
   .tapHint {
-    top: 70%;
+    --ring: calc(max(100vw, 60dvh) * 0.28);
+    top: 50%;
     bottom: auto;
-    left: 51%;
+    left: 50%;
     right: auto;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, calc(var(--ring) / -2));
+    gap: 14px;
+  }
+  .tapRing {
+    width: var(--ring);
+    height: var(--ring);
   }
 }
 
