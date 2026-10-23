@@ -113,9 +113,6 @@
   object-fit: cover;
   object-position: center center;
 }
-.envelopeVideoMobile {
-  object-position: center 60%;
-}
 @keyframes hintIn {
   from {
     opacity: 0;

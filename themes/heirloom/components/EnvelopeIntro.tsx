@@ -130,7 +130,7 @@ export default function EnvelopeIntro({
           }}
           onEnded={handleEnded}
           onError={() => playingRef.current && handleEnded()}
-          className={`${styles.envelopeVideo} ${shownVariant === "mobile" ? styles.envelopeVideoMobile : ""}`}
+          className={styles.envelopeVideo}
         />
       )}
 
