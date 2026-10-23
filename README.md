@@ -56,15 +56,15 @@ Reminders from setting this up. Tick them off as they're done.
 
 **Before real guests use the RSVP form**
 
-- [ ] Verify a sending domain in Resend (**Domains → Add domain**) and add the DNS records it lists where the domain is managed (for `amaliandashen.com`, likely Wix's domain settings). Until then the test sender `onboarding@resend.dev` can only email the Resend account's own address.
-- [ ] Change `RSVP_FROM_EMAIL` to the verified sender, e.g. `Amali & Ashen <rsvp@amaliandashen.com>`.
+- [ ] Buy a business domain (ideally in Vercel → **Settings → Domains**), verify it in Resend (**Domains → Add domain**) and add the DNS records it lists. A `vercel.app` address can't be used. Until then the test sender `onboarding@resend.dev` can only email the Resend account's own address.
+- [ ] Set `RSVP_FROM_EMAIL` in Vercel and `.env.local` to the verified sender, e.g. `RSVPs <rsvp@yourbrand.com>`, then redeploy.
 - [ ] Set `sites.notification_email` in Supabase to the couple's real address.
-- [ ] Later, with many couples: send from one business domain (e.g. `rsvp@yourbrand.com`) rather than verifying each couple's domain.
 
 **Remaining work**
 
-- [ ] Open pull requests and merge `feature/theme1-heirloom` (this repo) and `feature/landing-and-checkout` (business repo) into `main`.
-- [ ] Deploy to Vercel from `main`, adding the same settings as `.env.local` (Supabase URL and keys, Resend key and sender). Then test on real phones, especially the iPhone envelope intro.
+- [x] Open pull requests and merge `feature/theme1-heirloom` (this repo) and `feature/landing-and-checkout` (business repo) into `main`.
+- [x] Deploy to Vercel from `main` (project `wedding-saas-siti`, https://wedding-saas-siti.vercel.app), adding the same settings as `.env.local`. Every merge into `main` now deploys automatically.
+- [ ] Test on real phones, especially the iPhone envelope intro.
 - [ ] Delete the `archive/business-stripe` branch on GitHub once the business repo is confirmed complete.
 
 **Good to know**
@@ -72,3 +72,4 @@ Reminders from setting this up. Tick them off as they're done.
 - The **Emails** page in the Resend dashboard shows every RSVP email and whether it was delivered.
 - After `git pull`, run `npm ci` (not `npm install`) so `package-lock.json` isn't rewritten.
 - `.env.local` is only read when `npm run dev` starts: save it, then restart the server.
+- **Envelope videos** are replaced in **Storage → site-media → themes/heirloom/** (`envelope-mobile.mp4`, `envelope-desktop.mp4`); no code change needed. The video fills the screen and crops whatever doesn't fit, so export the mobile one at **1080 × 1800** (the shape of a phone browser with its toolbars showing) and keep the design a little away from the edges. Start on the closed envelope standing still, end on plain ivory, and keep it under ~10 MB. Any sound in the video plays on the tap; the music starts after it ends. Browsers and Supabase may show the old file for up to an hour.
