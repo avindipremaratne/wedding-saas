@@ -73,17 +73,15 @@ export async function submitRsvp(
     return fail("Something went wrong. Please try again.");
   }
 
-  // The couple's notification address is not readable with the anon key,
-  // so look it up with the admin client.
+  // The couple's notification settings are not readable with the anon key,
+  // so look them up with the admin client.
   const admin = getSupabaseAdmin();
   if (admin) {
-    const { data } = await admin
-      .from("sites")
-      .select("notification_email")
-      .eq("id", site.id)
-      .maybeSingle<{ notification_email: string | null }>();
-    if (data?.notification_email) {
-      await sendRsvpNotification({ to: data.notification_email, coupleNames: site.content.coupleNames, rsvp });
+    const settings = await notificationSettings(admin, site.id);
+    if (!settings.enabled) {
+      console.info(`[email] RSVP notification skipped: emails are turned off for site "${site.slug}".`);
+    } else if (settings.email) {
+      await sendRsvpNotification({ to: settings.email, coupleNames: site.content.coupleNames, rsvp });
     } else {
       console.info(`[email] RSVP notification skipped: no notification_email set for site "${site.slug}".`);
     }
@@ -92,4 +90,26 @@ export async function submitRsvp(
   }
 
   return success;
+}
+
+async function notificationSettings(
+  admin: NonNullable<ReturnType<typeof getSupabaseAdmin>>,
+  siteId: string,
+): Promise<{ email: string | null; enabled: boolean }> {
+  const { data, error } = await admin
+    .from("sites")
+    .select("notification_email, rsvp_email_enabled")
+    .eq("id", siteId)
+    .maybeSingle<{ notification_email: string | null; rsvp_email_enabled: boolean }>();
+  if (!error) return { email: data?.notification_email ?? null, enabled: data?.rsvp_email_enabled ?? true };
+
+  // Before the 20261101000000_rsvp_options migration runs there is no
+  // on/off column: keep sending as before rather than dropping emails.
+  console.error("[email] Could not read RSVP email settings:", error.message);
+  const { data: fallback } = await admin
+    .from("sites")
+    .select("notification_email")
+    .eq("id", siteId)
+    .maybeSingle<{ notification_email: string | null }>();
+  return { email: fallback?.notification_email ?? null, enabled: true };
 }
