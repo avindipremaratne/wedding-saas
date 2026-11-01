@@ -18,7 +18,7 @@ export function staticSiteSlugs(): string[] {
   return Object.keys(STATIC_SITES);
 }
 
-interface SiteRow {
+export interface SiteRow {
   id: string;
   slug: string;
   theme_id: ThemeId;
@@ -41,7 +41,10 @@ interface SiteRow {
   } | null;
 }
 
-function fromRow(row: SiteRow): Site | null {
+// Shown until a hero photo is uploaded for a new site in the admin area.
+const PLACEHOLDER_HERO = "themes/heirloom/venue-background.jpg";
+
+export function fromRow(row: SiteRow): Site | null {
   const c = row.site_content;
   if (!c) return null;
   const names = c.couple_names.join(" and ");
@@ -59,7 +62,7 @@ function fromRow(row: SiteRow): Site | null {
       rsvpDeadline: c.rsvp_deadline ?? undefined,
       venue: c.venue,
       // Media columns hold bucket paths (or, in older rows, full URLs).
-      heroPhoto: { src: mediaUrl(c.hero_photo_url), alt: names },
+      heroPhoto: { src: mediaUrl(c.hero_photo_url || PLACEHOLDER_HERO), alt: names },
       galleryPhotos: (c.gallery_photo_urls ?? []).map((src, i) => ({
         src: mediaUrl(src),
         alt: `${names}, photo ${i + 1}`,
