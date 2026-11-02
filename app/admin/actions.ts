@@ -249,3 +249,12 @@ export async function deleteRsvp(siteId: string, rsvpId: string): Promise<void> 
   if (error) throw new Error(`Could not delete the RSVP: ${error.message}`);
   revalidatePath("/admin", "layout");
 }
+
+// -------------------------------------------------------------- enquiries
+
+export async function setEnquiryHandled(enquiryId: string, handled: boolean): Promise<void> {
+  await assertAdmin();
+  const { error } = await requireSupabaseAdmin().from("enquiries").update({ handled }).eq("id", enquiryId);
+  if (error) throw new Error(`Could not update the enquiry: ${error.message}`);
+  revalidatePath("/admin", "layout");
+}

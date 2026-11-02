@@ -57,6 +57,8 @@ Sign in at `/admin` with `ADMIN_PASSWORD` (set it and `ADMIN_SESSION_SECRET` in 
   2. **Spreadsheet**: download a `.csv` and send it.
   3. **Private link**: `/rsvps/<token>` shows the couple their live list and a download button. **New link** replaces it; **Turn off** disables it.
 
+- **Enquiries**: messages from the business website's contact form (each is also emailed to you). Mark them as handled once answered. Needs `supabase/migrations/20261102000000_enquiries.sql`.
+
 Changes appear on the live site straight away (the page cache is cleared on save). Custom requests beyond these fields (new sections, layout changes) are code changes.
 
 **Before first use**, run `supabase/migrations/20261101000000_rsvp_options.sql` in the Supabase SQL editor. It adds the email on/off switch and the private-link column. Until it runs, RSVP emails keep working as before, but opening a site in the admin area shows an error.
@@ -80,8 +82,8 @@ Reminders from setting this up. Tick them off as they're done.
 
 **Remaining work**
 
-- [ ] Admin area: run `supabase/migrations/20261101000000_rsvp_options.sql` in the Supabase SQL editor, then add `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` to `.env.local` and to Vercel (**Settings → Environment Variables**) and redeploy.
-- [ ] Business website: turn it into a showcase with an enquiry form that emails you (no self-serve checkout).
+- [x] Admin area: run `supabase/migrations/20261101000000_rsvp_options.sql` in the Supabase SQL editor, then add `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` to `.env.local` and to Vercel (**Settings → Environment Variables**) and redeploy.
+- [ ] Enquiries: run `supabase/migrations/20261102000000_enquiries.sql` in the Supabase SQL editor (the business website saves its contact form here).
 - [x] Open pull requests and merge `feature/theme1-heirloom` (this repo) and `feature/landing-and-checkout` (business repo) into `main`.
 - [x] Deploy to Vercel from `main` (project `wedding-saas-siti`, https://wedding-saas-siti.vercel.app), adding the same settings as `.env.local`. Every merge into `main` now deploys automatically.
 - [ ] Test on real phones, especially the iPhone envelope intro.

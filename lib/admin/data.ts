@@ -128,3 +128,29 @@ export async function getSharedRsvps(
     rsvps: await fetchRsvps(data.id),
   };
 }
+
+export interface EnquiryRow {
+  id: string;
+  names: string;
+  email: string;
+  phone: string | null;
+  wedding_date: string | null;
+  design: string | null;
+  message: string | null;
+  handled: boolean;
+  created_at: string;
+}
+
+/** Enquiries from the business website, newest first. Null if the table is missing. */
+export async function listEnquiries(): Promise<EnquiryRow[] | null> {
+  await requireAdminPage();
+  const { data, error } = await requireSupabaseAdmin()
+    .from("enquiries")
+    .select("id, names, email, phone, wedding_date, design, message, handled, created_at")
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("[admin] Could not load enquiries:", error.message);
+    return null;
+  }
+  return data as EnquiryRow[];
+}
