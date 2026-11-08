@@ -70,6 +70,14 @@ Changes appear on the live site straight away (the page cache is cleared on save
 3. On the **RSVPs** tab, set up the options they chose.
 4. For a deployment per couple, create a Vercel project from this repo and set `DEFAULT_SITE_SLUG` to their slug.
 
+## Recording a demo video
+
+Add `?autoscroll` to a site's address (for example `https://vindora-heirloom.vercel.app/?autoscroll`). After the envelope opens, the page waits on the hero, then scrolls down at a steady speed, rests briefly at each section and stops at the footer. The music button is hidden so it doesn't cover the footer.
+
+- Pace: `?autoscroll=slow`, `?autoscroll=fast`, or a speed in pixels per second such as `?autoscroll=250`. The default is 200.
+- Touching or scrolling the page stops it.
+- Normal links without `?autoscroll` are not affected.
+
 ## Notes and next steps
 
 Reminders from setting this up. Tick them off as they're done.

@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { parseAutoscroll } from "@/lib/autoscroll";
+import AutoScroll from "./AutoScroll";
 import EnvelopeIntro from "./EnvelopeIntro";
 import MusicPlayer, { type MusicPlayerHandle } from "./MusicPlayer";
 
 // Coordinates the two browser-only pieces that sit above the page:
 // the envelope intro and the background music. When the envelope closes it
 // adds body.intro-done (which starts the hero CSS animations) and unmutes
-// the music.
+// the music. With ?autoscroll in the URL it also starts the demo scroll.
+const noSubscribe = () => () => {};
+
 export default function IntroController({
   envelopeVideos,
   musicVideoId,
@@ -16,7 +20,11 @@ export default function IntroController({
   musicVideoId: string | null;
 }) {
   const [showIntro, setShowIntro] = useState(Boolean(envelopeVideos));
+  const [introDone, setIntroDone] = useState(!envelopeVideos);
   const musicRef = useRef<MusicPlayerHandle>(null);
+  // The query string only exists in the browser; null while server rendering.
+  const search = useSyncExternalStore(noSubscribe, () => window.location.search, () => null);
+  const autoscroll = useMemo(() => (search === null ? null : parseAutoscroll(search)), [search]);
 
   // Always start at the top on load or reload, so guests see the envelope
   // and hero first. Browsers otherwise restore the last scroll position.
@@ -50,6 +58,7 @@ export default function IntroController({
 
   const handleIntroComplete = () => {
     setShowIntro(false);
+    setIntroDone(true);
     document.body.classList.add("intro-done");
     musicRef.current?.unmute();
   };
@@ -60,6 +69,7 @@ export default function IntroController({
         <EnvelopeIntro videos={envelopeVideos} onComplete={handleIntroComplete} />
       )}
       {musicVideoId && <MusicPlayer ref={musicRef} videoId={musicVideoId} />}
+      {autoscroll && <AutoScroll options={autoscroll} start={introDone} />}
     </>
   );
 }
