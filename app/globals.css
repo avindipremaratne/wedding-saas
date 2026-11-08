@@ -87,6 +87,11 @@ body {
   font-family: var(--font-sans);
 }
 
+/* ?autoscroll demo recordings: keep the music button off the footer. */
+body.autoscroll .music-toggle {
+  display: none;
+}
+
 /* Tailwind v3 (the Wix build) gave buttons a pointer cursor; v4 doesn't. */
 button:not(:disabled),
 [role="button"]:not(:disabled) {

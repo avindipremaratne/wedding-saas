@@ -194,7 +194,7 @@ export default function MusicPlayer({ videoId, ref }: { videoId: string; ref: Re
         type="button"
         onClick={toggleMute}
         aria-label={isMuted ? "Unmute background music" : "Mute background music"}
-        className="fixed bottom-5 right-5 z-[9998] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gold/60 bg-navy/85 text-lg leading-none tracking-normal text-gold"
+        className="music-toggle fixed bottom-5 right-5 z-[9998] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gold/60 bg-navy/85 text-lg leading-none tracking-normal text-gold"
       >
         {isMuted ? "🔇" : "🔊"}
       </button>
