@@ -18,6 +18,13 @@ export default function IntroController({
   const [showIntro, setShowIntro] = useState(Boolean(envelopeVideos));
   const musicRef = useRef<MusicPlayerHandle>(null);
 
+  // Always start at the top on load or reload, so guests see the envelope
+  // and hero first. Browsers otherwise restore the last scroll position.
+  useEffect(() => {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+  }, []);
+
   // No envelope for this site: start the hero animations straight away.
   useEffect(() => {
     if (!envelopeVideos) document.body.classList.add("intro-done");
