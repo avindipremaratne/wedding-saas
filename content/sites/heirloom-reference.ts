@@ -81,9 +81,8 @@ export const heirloomReferenceSite: Site = {
       rsvpPrompt: "Will you join us as we become us?",
       footerTagline: "The Beginning of Always",
       credit: {
-        name: "Avindi Premaratne",
-        email: "avindibuthmini@gmail.com",
-        phone: "+15197313490",
+        name: "Vindora Invites",
+        email: "vindorainvites@gmail.com",
       },
     },
   },
